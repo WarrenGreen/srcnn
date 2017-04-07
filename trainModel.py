@@ -13,24 +13,23 @@ TRAIN_PATH = "data/train/"
 TRAIN_LABELS_PATH = "data/train_labels/"
 
 def load_data(xPath, yPath):
-    X, Y = [], []
-    count = 0
+    X, Y = np.zeros((3802,400,400,3)), np.zeros((3802,400,400,3))
+    index = 0
     for file in os.listdir(xPath):
-        if count > 100:
-            break
-
-        count += 1
+        index += 1
+ 	if index >= 3802:
+		break
         img = Image.open(xPath + file)
         imgArray = np.asarray(img, dtype='uint8')
         imgArray =  imgArray / (MAX_VAL * 1.0)
-        X.append(imgArray)
+        X[index] = imgArray
 
         img = Image.open(yPath + file)
         imgArray = np.asarray(img, dtype='uint8')
         imgArray =  imgArray / (MAX_VAL * 1.0)
-        Y.append(imgArray)
+        Y[index] = imgArray
 
-    return np.array(X), np.array(Y)
+    return X, Y
 
 
 def get_model():
@@ -44,11 +43,11 @@ def get_model():
 
 
 print ("start")
-checkpointer = ModelCheckpoint(filepath="models/weights.hpytho5", verbose=1, save_best_only=True)
+checkpointer = ModelCheckpoint(filepath="models/weights.h5", verbose=1, save_best_only=True)
 model = get_model()
 print ("get model")
 X,Y = load_data(TRAIN_PATH, TRAIN_LABELS_PATH)
 print ("data loaded")
-model.fit(X, Y, batch_size=32, epochs=1, validation_split=0.2, shuffle=True, callbacks=[checkpointer])
+model.fit(X, Y, batch_size=32, epochs=10, validation_split=0.2, shuffle=True, callbacks=[checkpointer])
 print ("fit done")
 model.save('model.h5')

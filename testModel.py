@@ -36,13 +36,13 @@ def get_model():
     model.add(Convolution2D(16, 5, activation="relu", padding="same"))
     model.add(Convolution2D(3, 5, activation="relu", padding="same"))
     model.load_weights("models/weights.h5")
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer="adam", loss="mse", metrics=['accuracy'])
 
     return model
 
 model = get_model()
 X,Y = load_data(TEST_PATH, TEST_LABELS_PATH)
 score = model.evaluate(X, Y)
-print("{}: {:.2f}".format(model.metrics_names[1], score[1]*100))
+print (model.metrics_names, score)
 
 

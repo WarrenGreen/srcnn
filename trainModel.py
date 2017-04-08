@@ -13,21 +13,21 @@ TRAIN_PATH = "data/train/"
 TRAIN_LABELS_PATH = "data/train_labels/"
 
 def load_data(xPath, yPath):
-    X, Y = np.zeros((3802,400,400,3)), np.zeros((3802,400,400,3))
+    X, Y = np.zeros((4000,400,400,3)), np.zeros((4000,400,400,3))
     index = 0
     for file in os.listdir(xPath):
         index += 1
- 	if index >= 3802:
-		break
+ 	if index <= 3802:
+		continue
         img = Image.open(xPath + file)
         imgArray = np.asarray(img, dtype='uint8')
         imgArray =  imgArray / (MAX_VAL * 1.0)
-        X[index] = imgArray
+        X[index-3803] = imgArray
 
         img = Image.open(yPath + file)
         imgArray = np.asarray(img, dtype='uint8')
         imgArray =  imgArray / (MAX_VAL * 1.0)
-        Y[index] = imgArray
+        Y[index-3803] = imgArray
 
     return X, Y
 
@@ -37,13 +37,14 @@ def get_model():
     model.add(Convolution2D(32, 9, activation="relu", input_shape=(400,400,3), padding="same"))
     model.add(Convolution2D(16, 5, activation="relu", padding="same"))
     model.add(Convolution2D(3, 5, activation="relu", padding="same"))
-    model.compile(optimizer="adam", loss="mse")
+    model.load_weights("models/weights.h5")
+    model.compile(optimizer="adam", loss="mse", metrics=['accuracy'])
 
     return model
 
 
 print ("start")
-checkpointer = ModelCheckpoint(filepath="models/weights.h5", verbose=1, save_best_only=True)
+checkpointer = ModelCheckpoint(filepath="models/weights2.h5", verbose=1, save_best_only=True)
 model = get_model()
 print ("get model")
 X,Y = load_data(TRAIN_PATH, TRAIN_LABELS_PATH)

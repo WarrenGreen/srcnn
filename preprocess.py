@@ -58,13 +58,13 @@ def generate_dirty():
 
     for file in os.listdir(input_train_path):
         img = Image.open(input_train_path+file)
-        temp = img.resize((rows/2, cols/2), Image.BILINEAR)
+        temp = img.resize((int(rows/2), int(cols/2)), Image.BILINEAR)
         temp = temp.resize((rows,cols), Image.BILINEAR)
         temp.save(output_train_path+file)
 
     for file in os.listdir(input_test_path):
         img = Image.open(input_test_path+file)
-        temp = img.resize((rows/2, cols/2), Image.BILINEAR)
+        temp = img.resize((int(rows/2), int(cols/2)), Image.BILINEAR)
         temp = temp.resize((rows,cols), Image.BILINEAR)
         temp.save(output_test_path+file)
 

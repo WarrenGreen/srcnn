@@ -17,8 +17,8 @@ def load_data(xPath, yPath):
     index = 0
     for file in os.listdir(xPath):
         index += 1
- 	if index <= 3802:
-		continue
+        if index <= 3802:
+            continue
         img = Image.open(xPath + file)
         imgArray = np.asarray(img, dtype='uint8')
         imgArray =  imgArray / (MAX_VAL * 1.0)
